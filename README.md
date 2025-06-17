@@ -38,21 +38,23 @@ When making a reservation, the system:
 
 1. Clone the Repository
 
-git clone https://github.com/KubaCzech/BigData-Project.git
+<pre> ``` git clone https://github.com/KubaCzech/BigData-Project.git ``` </pre>
 
-cd BigData-Project
+<pre> ``` cd BigData-Project ``` </pre>
 
 2. Install Requirements
 
 3. Run docker compose file
 
-4. Run the System
+4. Create keyspace named "reservations"
 
-python main.py
+5. Run the System
 
-You will be presented with a menu:
+- <pre> ``` python3 main.py ``` </pre>
 
-Follow the prompts to interact with the system.
+- You will be presented with a menu
+
+- Follow the prompts to interact with the system.
 
 ### Example Use Case
 
