@@ -24,13 +24,15 @@ When making a reservation, the system:
 3. Generates unique customer and reservation IDs
 
 ### Project Structure
-
-project/
-│
-├── project.py         # Core logic of the reservation system
-├── main.py            # CLI interface to interact with the system
-├── README.md          # You're reading this file!
-└── (other modules)    # Optional: persistence, stress tests, etc.
+| File                 | Purpose              |
+|----------------------|----------------------|
+| project.py           | Core logic of system |
+| main.py              | Script that runs CLI app    |
+| tests.py             | Core logic of tester class   |
+| cassandra_tests.py | Script that loads and runs tester class   |
+| docker-compose.yml | File that creates cassandra nodes |
+| Big_Data_report.pdf | File containing report |
+| README.md | File containing info about the repo |
 
 ### How to Run it
 
@@ -42,18 +44,22 @@ cd BigData-Project
 
 2. Install Requirements
 
-3. Run the System
+3. Run docker compose file
+
+4. Run the System
+
 python main.py
+
 You will be presented with a menu:
 
 Follow the prompts to interact with the system.
 
 ### Example Use Case
 
-You run main.py
-Choose option 7 to make a reservation
-Enter customer ID, start time, end time, number of guests
-System finds appropriate table(s) and books the reservation
+1. You run main.py
+2. Choose option 7 to make a reservation
+3. Enter customer ID, start time, end time, number of guests
+4. System finds appropriate table(s) and books the reservation
 
 ### License
 This project is open source and free to use under the MIT License.
