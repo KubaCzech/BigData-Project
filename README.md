@@ -4,7 +4,7 @@
 This is a simple command-line based restaurant reservation system that allows managing tables, customers, and reservations in a scalable and interactive way. The system is designed to simulate the backend logic of a restaurant’s reservation workflow, including support for multiple tables and customer management.
 
 ### Author
-**Author 1**: [Kuba Czech](https://github.com/KubaCzech)
+**Author**: [Kuba Czech](https://github.com/KubaCzech)
 **Index Number**: 156035
 
 ### Features
