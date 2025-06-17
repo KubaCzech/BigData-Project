@@ -19,9 +19,9 @@ The ReservationSystem class (defined in project.py) manages the internal state o
 
 When making a reservation, the system:
 
-Assigns one or more available tables to fit the party size
-Ensures no double-booking of tables
-Generates unique customer and reservation IDs
+1. Assigns one or more available tables to fit the party size
+2. Ensures no double-booking of tables
+3. Generates unique customer and reservation IDs
 
 ### Project Structure
 
@@ -32,11 +32,13 @@ project/
 ├── README.md          # You're reading this file!
 └── (other modules)    # Optional: persistence, stress tests, etc.
 
-How to Run it
+### How to Run it
 
 1. Clone the Repository
-git clone https://github.com/KubaCzech/BigData.git
-cd restaurant-reservation-system
+
+git clone https://github.com/KubaCzech/BigData-Project.git
+
+cd BigData-Project
 
 2. Install Requirements
 
