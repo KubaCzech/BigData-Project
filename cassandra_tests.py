@@ -2,6 +2,7 @@ import random
 import unittest
 import threading
 import time
+from collections import Counter
 from datetime import datetime, timedelta
 from project import ReservationSystem
 
@@ -27,6 +28,7 @@ class ReservationSystemTester(unittest.TestCase):
         # Running Stress Test 1 (Rapid same request from one client
         client_id = self.client_ids[0]
         table_id = self.table_ids[0]
+        nr_before = len(self.system.get_all_reservations())
 
         def spam_reservations():
             for _ in range(10):
@@ -38,6 +40,9 @@ class ReservationSystemTester(unittest.TestCase):
         t = threading.Thread(target=spam_reservations)
         t.start()
         t.join()
+
+        nr_after = len(self.system.get_all_reservations())
+        self.assertEqual(nr_after - nr_before, 1)
 
     def test_2(self, num_threads=5):
         # Running Stress Test 2 (Multiple clients making random requests
@@ -60,6 +65,8 @@ class ReservationSystemTester(unittest.TestCase):
         for t in threads:
             t.join()
 
+        self.assertEqual(self.system.session.keyspace, 'reservations')
+
     def test_3(self):
         # Running Stress Test 3 (Two clients try to fully occupy the system
         def fill_up(client_id):
@@ -75,6 +82,17 @@ class ReservationSystemTester(unittest.TestCase):
         t2.start()
         t1.join()
         t2.join()
+
+        reservations = self.system.get_all_reservations()
+        reservations = [i.client_id for i in reservations if i.beg_of_res >= datetime(2025, 6, 18)]
+        cnt = Counter(reservations)
+
+        l = [i[1] for i in list(cnt.items())]
+        res1, res2 = l[0], l[1]
+        self.assertGreater(res1, 0)
+        self.assertGreater(res2, 0)
+        self.assertLess(res1/(res1+res2), 0.7)
+        self.assertLess(res2/(res1+res2), 0.7)
 
 if __name__ == '__main__':
     unittest.main()

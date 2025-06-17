@@ -20,8 +20,8 @@ class ReservationSystem:
             request_timeout=10
         )
 
-        # cluster = Cluster(['127.0.0.1', '127.0.0.2', '127.0.0.3'], port=9043, execution_profiles=my_profile)
-        cluster = Cluster(['127.0.0.1'], port=9043, execution_profiles={EXEC_PROFILE_DEFAULT: my_profile})
+        cluster = Cluster(['127.0.0.1', '127.0.0.2', '127.0.0.3'], port=9043, execution_profiles={EXEC_PROFILE_DEFAULT: my_profile})
+        # cluster = Cluster(['127.0.0.1'], port=9043, execution_profiles={EXEC_PROFILE_DEFAULT: my_profile})
         self.session = cluster.connect('reservations')
         print("Succesfully connected to cluster")
 
@@ -65,7 +65,6 @@ class ReservationSystem:
         batch = BatchStatement()
         for i in range(self.nr_of_clients):
             customer_id = uuid4()
-            # customer_id = i
             name = names[random.randint(0, len(names)-1)]
             surname = surnames[random.randint(0, len(surnames)-1)]
             batch.add(insert_client, (customer_id, name, surname))
@@ -81,7 +80,6 @@ class ReservationSystem:
 
         for i in range(self.nr_of_tables):
             table_id = uuid4()
-            # table_id = i
             nr_of_seats = random.randint(2, 12)
             batch.add(insert_table, (table_id, nr_of_seats))
 
@@ -169,11 +167,11 @@ class ReservationSystem:
             if table_ in free_tables:
                 table_id = table_
             else:
-                # print('Cant assign table, already occupied')
+                print('Cant assign table, already occupied')
                 return
 
         if table_id is None:
-            # print("No available table for given time and guest count.")
+            print("No available table for given time and guest count.")
             return None
         else:
             insert_res = self.session.prepare(
@@ -181,7 +179,7 @@ class ReservationSystem:
             )
             res_id = uuid4()
             self.session.execute(insert_res, (res_id, client_id, beg_of_res, end_of_res, number_of_guests, table_id))
-            # print(f"Reservation made with id {res_id} at table {table_id}")
+            print(f"Reservation made with id {res_id} at table {table_id}")
         return res_id
 
     # Function to update a reservation based on what we want to update
@@ -211,7 +209,7 @@ class ReservationSystem:
             new_data = [client_id, beg_of_res, end_of_res, number_of_guests]
             table_id = self.assign_table_number(new_data, all_records)
             if table_id is None:
-                # print("No table available for updated time or guest count.")
+                print("No table available for updated time or guest count.")
                 return
         else:
             table_id = old_info.table_id
@@ -230,7 +228,7 @@ class ReservationSystem:
         res = self.session.execute(f"SELECT * FROM reservations where res_id = {id_of_res}")[0]
         client_id = res.client_id
         client = [i for i in self.session.execute(f"SELECT * FROM customers where customer_id = {client_id}")][0]
-        print(f"Reservation id: {res.res_id},\nStart of res: {res.beg_of_res},\nEnd of res: {res.end_of_res},\nClient Name: {client.name},\nClient surname: {client.surname},\nTable id: {res.table_id}\n\n")
+        print(f"Reservation id: {res.res_id},\nStart of res: {res.beg_of_res},\nEnd of res: {res.end_of_res},\nClient Name: {client.name},\nClient surname: {client.surname},\nNumber of guests: {res.number_of_guests},\nTable id: {res.table_id}\n")
         return res
 
     # DONE
@@ -240,6 +238,33 @@ class ReservationSystem:
             print(row)
         return rows
     
+    def get_all_reservations(self):
+        rows = [i for i in self.session.execute("SELECT * FROM reservations")]
+        return rows
+    
+    def get_all_tables(self):
+        rows = [i for i in self.session.execute("SELECT * FROM tables")]
+        return rows
+    
+    def get_all_customers(self):
+        rows = [i for i in self.session.execute("SELECT * FROM customers")]
+        return rows
+    
+    def get_all_reservations_for_customer(self, id):
+        rows = [i for i in self.session.execute("SELECT * FROM reservations")]
+        rows = [i for i in rows if str(i.client_id) == str(id)]
+        return rows
+    
+    def get_all_reservations_for_date(self, date):
+        rows = [i for i in self.session.execute("SELECT * FROM reservations")]
+        rows = [i for i in rows if str(i.beg_of_res.date()) == date]
+        return rows
+    
+    def delete_reservation(self, id):
+        query = f"DELETE FROM reservations WHERE res_id = {id}"
+        self.session.execute(query)
+        print(f"Reservation {id} succesfully deleted")
+
     def shutdown(self):
         self.session.shutdown()
         self.session.cluster.shutdown()
