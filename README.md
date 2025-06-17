@@ -38,9 +38,9 @@ When making a reservation, the system:
 
 1. Clone the Repository
 
-<pre> ``` git clone https://github.com/KubaCzech/BigData-Project.git ``` </pre>
+``` git clone https://github.com/KubaCzech/BigData-Project.git ```
 
-<pre> ``` cd BigData-Project ``` </pre>
+``` cd BigData-Project ```
 
 2. Install Requirements
 
@@ -50,7 +50,7 @@ When making a reservation, the system:
 
 5. Run the System
 
-- <pre> ``` python3 main.py ``` </pre>
+- ``` python3 main.py ```
 
 - You will be presented with a menu
 
