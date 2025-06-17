@@ -1,0 +1,39 @@
+version: "3"
+services:
+  cas-project-1:
+    image: cassandra:latest
+    container_name: cas-project-1
+    hostname: cas-project-1
+    environment:
+      - "MAX_HEAP_SIZE=1G"
+      - "HEAP_NEWSIZE=256M"
+      - "CASSANDRA_CLUSTER_NAME=casproject"
+    ports:
+      - 127.0.0.1:9043:9042
+
+  cas-project-2:
+    image: cassandra:latest
+    container_name: cas-project-2
+    hostname: cas-project-2
+    environment:
+      - "MAX_HEAP_SIZE=1G"
+      - "HEAP_NEWSIZE=256M"
+      - "CASSANDRA_CLUSTER_NAME=casproject"
+      - "CASSANDRA_SEEDS=cas-project-1"
+    ports:
+      - 127.0.0.2:9043:9042 # port na 9044:9042?
+    depends_on:
+      - cas-project-1
+  cas-project-3:
+    image: cassandra:latest
+    container_name: cas-project-3
+    hostname: cas-project-3
+    environment:
+      - "MAX_HEAP_SIZE=1G"
+      - "HEAP_NEWSIZE=256M"
+      - "CASSANDRA_CLUSTER_NAME=casproject"
+      - "CASSANDRA_SEEDS=cas-project-1"
+    ports:
+      - 127.0.0.3:9043:9042 # port na 9045:9042?
+    depends_on:
+      - cas-project-2
